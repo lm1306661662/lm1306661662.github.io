@@ -1,0 +1,43 @@
+MVC      Controller 控制器   Model 模块  View 视图
+
+Model： 负责业务与数据库(ORM)的对象
+
+View： 负责业务逻辑并适当调用Model和Template
+
+Template: 负责把页面渲染展示给用户
+
+MVC
+M（模型层）
+V（视图层）
+C（业务层）
+
+Django ===>  MVT
+   M（模型层）
+   V（视图）：处理业务逻辑
+   T（模板Template）：HTML
+
+创建虚拟环境   virtualenv --no-site-packages -p D:\python\python.exe jdenv6
+
+--no-site-packages 干净的文件
+-p 指定路径（只有一个python环境不用写）
+pip freeze 查看版本
+cd Scripts 进入Scripts文件  activate在这个文件夹下
+activate 进入环境
+deactivate 退出环境
+
+python版本3.6 + Django 1.11
+
+创建  Django项目
+django-admin startproject day01
+
+
+python manage.py
+python manage.py runserver 
+python manage.py runserver 0.0.0.0:8080  部署方式
+
+
+
+安装数据库驱动
+pip install pymysql
+python manage.py migrate   创建连接关系
+python manage.py createsuperuser 创建用户名
