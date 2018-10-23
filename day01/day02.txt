@@ -1,0 +1,71 @@
+进入虚拟环境 cd evn cd cd activate进入环境  deactivate退出环境
+创建项目 cd ..cd .. cd wordspace cd django-admin startproject 文件夹名
+ 
+打开pycharm open文件 
+settings 配置
+dj6配置改成manage.py
+修改文件 --init-- 
+import pymysql
+pymysql.install_as_MySQLdb()
+
+配置settings.py 中的database
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dj6',
+        'HOST':'127.0.0.1',
+        'USER':'root',
+        'PASSWORD':'123456',
+        'PORT':3306
+    }
+}
+
+
+
+python manage.py startapp  app  创建一个文件APP
+
+
+ORM object-relation-mapping
+对象关系映射
+all() 查询所有数据
+
+
+1.models.py
+class Student(models.Model):
+    #定义s_name字段，varchar类型，最长不超过6字符，唯一
+    s_name = models.CharField(max_length=6,unique=True)
+    #定义s_age字段，int类型
+    s_age= models.IntegerField(default=18)
+    #定义s_gender字段，int类型
+    s_gender = models.BooleanField(default=1)
+
+
+    class Meta:
+        #定义模型迁移到数据库中的表名
+        db_table = 'student'
+    #定义create_time字段,创建时间
+    create_time = models.DateTimeField(auto_now_add=True,null=True)
+    #定义operate_time字段，修改时间
+    operate_time = models.DateTimeField(auto_now=True,null=True)
+
+
+
+auto_now 每次保存时更新时间
+auto_now 第一保存时更新时间
+
+
+2.installed_app 创建应用
+
+
+数据库添加数据
+先在urls添加链接
+然后再views中引入models中的模块
+添加一个函数创建学生添加数据
+第一种stu = Student()
+stu.name = '小李'
+第二种
+Student.objects.create(s_name='小驴')
+
+
+makemigrations 生成迁移
+migrate 迁移到数据库
