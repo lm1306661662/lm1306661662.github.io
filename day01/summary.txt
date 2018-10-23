@@ -1,0 +1,123 @@
+Django 
+
+MVC   Controller 控制器  Model 模块 View 视图
+
+Model： 负责业务与数据库（ORM）的对象
+
+View： 负责业务逻辑并适当调用Model和Template
+
+Template：负责把页面渲染展示给用户
+
+MVC
+M （模型层）
+V （视图层）
+C （业务层）
+
+Django  ===>  MVT
+	M（模型层）
+	V （视图）：处理业务逻辑
+	T （模板Template）：HTML
+创建文件夹env 
+创建虚拟环境 
+virtualenv --no-site-packages -p D:\python\python.exe jdenv6（文件夹名） 
+
+--no-site-packages 干净的文件
+-p 指定路径 （只有一个python环境不用写）
+pip freeze 查看版本
+cd Scripts 进入Scripts文件 activate在这个文件夹下
+activate 进入环境
+deactivate 退出环境
+
+python版本3.6 + Django 1.11  版本匹配
+
+创建  Django项目
+django-admin startproject day01
+
+python manage.py
+python manage.py runserver
+python manage.py runserver 0.0.0.0:8080 部署方式
+
+
+安装数据库驱动
+pip install pymysql
+python manage.py migrate 创建连接关系
+python manage.py createsuperuser 创建用户名
+
+
+
+
+进入虚拟环境  cd evn cd cd Script activate进入环境  deactivate退出环境
+创建项目 cd .. cd .. cd cd 
+创建新的项目
+django-admin startproject 文件夹名
+
+打开pycharm open文件
+
+settings配置
+dj6配置改成manage.py
+修改文件 --init--
+import pymysql
+pymysql.install_as_MySQLdb()
+
+配置settings.py 中的database
+DATABASES = {
+	'default':{
+	    'ENGINE':'django.db.backends.mysql',
+            'NAME':'dj6',
+            'HOST':'127.0.0.1',
+            'USER':'root'
+            'PASSWORD':'123456'
+            'PORT':3306
+        }
+
+}
+
+python manage.py startapp app 创建一个文件app
+
+ORM object-relation-mapping
+
+模块 
+创建模块
+models.py
+创建类及数据库表的内容
+
+
+auto_now 每次保存时间更新时间
+ayto_now_app 第一次保存时更新时间
+
+settings 中installed_app添加app  创建应用
+
+数据库添加数据
+现在urls添加链接（正则）
+然后在views中引入models中的模块和django.shortcuts 模块和django.http模块
+from django.shortcuts import render
+from django.http import HttpResponse
+from app.models import Student
+
+添加一个函数创建学生添加数据
+第一种
+stu = Student()
+stu.name = '小驴'
+第二种
+Student.object.create(s_name='小驴')
+
+
+makemigrations 生成迁移
+mirgrate 迁移到数据库
+
+
+
+查询 
+all（）查询所有对象信息
+filter（）过滤
+first（）获取第一个
+last（）获取最后一个
+get（）获取对象 ，容易出错 获取时数据中只能有一个这样的数据，否则会出错
+模糊查询  内容包含在内contains  在前面startswith  在后面endswith
+大于 gt 小于 lt 大于等于 gte 小于等于 lte
+升序 order_by 降序 order_by 内容加-
+查看不满足条件的数据exclude()
+统计个数count
+values（）转换格式  转换成真实的数据，然后表示出来
+id = pk(primary key)
+stu_name = [stu_name for stu in stus]从学生中选出学生将姓名存入列表
