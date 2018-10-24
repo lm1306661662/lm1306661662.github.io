@@ -1,0 +1,90 @@
+Django  第三天 
+Django的主体MVT就是model、view、template
+
+
+
+model是模型： 数据库的搭建以及数据库表的改变（文件需要迁移：迁移就是在指定的数据库中建表，过程是先写出迁移文件makemigrations（可以理解为制作数据库迁移），然后迁移到数据库中migrate（写入到数据库，对数据库进行改变））
+model中的内容是类
+class 类名（）：
+	数据库表头 = models.数据类型类（属性1，属性2）
+        数据库表头 = models.数据类型类（属性1，属性2）
+	#数据表重命名（不命名是应用名_类名小写）
+        class Meta：
+		db_table='表名'
+
+view是视图： 功能函数
+view中的内容是函数也是类的功能
+可以对数据进行增删改查
+增create
+def create_stu(request):
+    Student.objects.create(s_name='小赋')
+    return HttpResponse('创建成功')
+删delete
+def del_stu(request):
+    Student.objects.filter(s_name='小李').delete()
+    return  HttpResponse('删除成功')
+改update
+def update_stu(request):
+    Student.objects.filter(s_name='莉哥').update(s_name='李哥')
+    return HttpResponse('修改成功')
+查（太他妈多了）
+all()查询所有对象
+filter（）过滤，没有不会报错，显示空
+get()获取对象，没有出错
+first（）获取第一个
+last（）获取最后一个
+模糊查询：__contains包含__startswith开头__endswith结尾
+大于__gt小于__lt大于等于__gte小于等于__lte
+排序：升序order_by（'字段'）降序order_by（'-字段'）
+查询不满足条件的数据exclude（）
+统计个数count
+转换数据values（）
+id = pk(primary key)
+或条件 | 且条件 & 非条件 ~   引入Q
+查询语文成绩比数学成绩大10分  引入F
+stus  = Student.objects.filter(yuwen__gt = F('shuxue') + 10)
+
+
+def all_stu(request):
+    # 获取所有学生信息
+    stus = Student.objects.all()
+    # 返回页面
+    return render(request, 'stus.html', {'students':stus})
+
+def add_info(request):
+    # method 获取请求HTTP方式
+    if request.method == 'GET':
+        return render(request,'info.html')# 跳转到这个页面
+    if request.method == 'POST':
+        # 获取页面中提交的手机号码和地址，并保存
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+        stu_id = request.GET.get('stu_id')
+        StudentInfo.objects.create(phone=phone, address=address, stu_id=stu_id)
+        return HttpResponse('创建扩展表信息成功')
+关联关系
+1） 一对一:OneToOneField
+  class A:
+	id = xxx
+	b = OneToOneField(B)
+  class B:
+	id = xxx
+  已知a对象，查找b对象：a.b
+  已知b对象，查找a对象：b.a
+2） 一对多
+  class A:ForeignField
+	id = xxx
+	b = ForeignField(B)
+  class B:
+	id = xxx
+  已知a对象，查找b对象：a.b
+  已知b对象，查找a对象：b.a_set
+3） 多对多
+
+template是页面样式： HTML页面
+获取数据
+
+
+url：调用函数
+
+数据库数据：类的对象
