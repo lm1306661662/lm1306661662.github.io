@@ -46,7 +46,7 @@ datetime.datetime.strptime('YY-mm-dd HH:MM:SS) 转换时间
 
 
 爷爷（base.html）的房子四外漏风  儿子继承进行装修（base_main.html）  孙子继承（index.html）
-装修{% block ‘装修哪里’%}{% endblock %}
+装修{% block ‘位置’%}{% endblock %}
 继承{% extends '爸爸' %}
 在原来的基础上装修{{ block.super }}
 样式  引入static（配置settings.py :STATICFILES_DIRS=[
@@ -57,7 +57,7 @@ datetime.datetime.strptime('YY-mm-dd HH:MM:SS) 转换时间
 {% load static %}
  <link href="{% static 'css/index.css' %}" rel="stylesheet">
 
-可以看到<!-- -->（看到的是未完成的要完成{%block c%}{%endblock%}）
+可以看到<!-- -->（看到的是未完成的要完成，不然会出错{%block c%}{%endblock%}）
 不能看到的{#    #}
 {% for x in xxx %}
 {% endfor }
@@ -65,7 +65,7 @@ datetime.datetime.strptime('YY-mm-dd HH:MM:SS) 转换时间
 茶{{forloop.counter}}(默认1可以是0)
 倒茶{{forloop.revcounter}}
 
-1拿出手机如果猜对了给红包1付钱，如果没猜对除了1剩下的人平分
+1拿出手机如果猜对了给红包1付钱，如果没猜对除了1剩下的人每个人都要付钱
 {#{% if forloop.counter == 1 %}#}
 {% ifequal forloop.counter 1%}
       <em style="color:red;">{{stu.s_name}}</em>
