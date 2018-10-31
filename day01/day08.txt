@@ -1,0 +1,19 @@
+AbstractUser抽象User
+class MyUser(AbstractUser):
+    # 扩展Django自带的auth_user表，可以自定义新增的字段
+    class Meta:
+        # django 默认给每个模型初始化三个权限
+        # 默认的是change，delete，add权限
+        permissions = (
+            ('add_my_user','新增用户权限'),
+            ('change_my_user_username', '修改用户名权限'),
+            ('change_my_user_password', '修改用户密码权限'),
+            ('all_my_user', '查看用户权限')
+        )
+三角关系
+user-group-permission
+
+myuser-groups
+group-permissions
+myuser-user-permissions
+
