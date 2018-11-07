@@ -1,0 +1,164 @@
+一、准备工作
+步骤：
+1.创建虚拟环境 virtualenv --no-site-packeages -p python.exe文件路径 虚拟环境文件夹名
+
+--no-site-packages 干净的文件夹
+-p python.exe文件路径 在系统中有两个python版本的时候指定python版本
+
+pip freeze 查看版本
+
+2.cd 进入环境找到Scripts文件夹   终端中输入activate
+activate 进入环境
+deactivate 退出环境
+3.pip install Django==1.11
+4.创建Django项目
+django-admin startproject 项目名
+
+python manage.py 
+python manage.py runserver 0.0.0.0:8080 部署方式
+pip install pymysql 安装数据库驱动
+python manage.py migrate 创建连接关系
+python manage.py createsuperuser 创建超级用户名
+
+
+
+
+
+二、修改配置：pycharm
+1.settings 配置改成创建的虚拟环境
+dj6添加名选择manage.py
+runserver 8080
+选择创建的虚拟环境
+2.修改init.py
+import pymysql
+pymysql.install_as_MySQLdb()
+3.配置settings.py
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'user',# 添加app
+    'goods',
+    'cart',
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.middleware.TestMiddleware',# 导入中间件
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],# 为文件夹template添加路径
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+DATABASES = { # 配置数据库
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'freshdb6',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
+        'POST': 3306
+    }
+}
+
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]# 配置static文件夹的路径
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'D:\wordspace\/6.django\media'# 配置共用图片文件的路径
+
+
+创建app
+python manage.py startapp 功能文件夹名
+
+创建templates用于存放html文件
+创建static用于存放css，js， image（非共用）
+创建utils用于存放中间件middleware.py和装饰器function.py
+
+
+
+
+
+
+三、注册、登录、注销
+导入模块
+python manage.py makemigrations 生成迁移文件
+python manage.py migrate 迁移文件
+创建forms表单
+例：
+class UserRegisterForm(forms.Form):
+                                                                             })
+    password = forms.CharField(max_length=255,error_messages={'max_length': '密码长度不能大于255'})
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        user = User.objects.filter(username=username).first()
+        if user:
+            raise forms.ValidationError({'username': '该用户已经被注册，请重新注册'})
+        if self.cleaned_data['password'] != self.cleaned_data['cpassword']:
+            raise forms.ValidationError({'password': '两次输入的密码不一致'})
+        return self.cleaned_data
+
+views.py中：
+def register(request):
+    if request.method == 'GET':
+        return render(request, 'register.html')
+    if request.method == 'POST':
+        data = request.POST
+        form = UserRegisterForm(data)
+        if form.is_valid():
+            password = make_password(self.cleaned_data.get('password'))# 密码加密
+	User.objects.create(username = form.cleaned_data.get('username'),
+                                password = password,
+                                email = form.cleaned_data.get('email')
+                                )
+            return HttpResponseRedirect(reverse('user:login'))
+        else:
+            errors = form.errors
+            return render(request, 'register.html', {'errors': errors}) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

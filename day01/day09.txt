@@ -1,0 +1,18 @@
+GET：获取
+POST：创建
+PUT：用于修改数据（全部）
+PATCH：用于修改数据（部分）
+DELETE:删除数据
+
+
+$.ajax({
+	url:'127.0.0.1:8080/app/articlr,
+	type:'POST'
+	data:{'title':'coco', 'desc':'123456'},
+	dataType:'json',
+	success:functions(data){
+	},
+	error:functions(data){
+	}
+})
+

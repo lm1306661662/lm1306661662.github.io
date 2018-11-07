@@ -1,0 +1,20 @@
+
+http无状态协议
+
+思路：
+	1.django自带auth模块,实现登录注册注销
+	    
+           登录：auth.login()
+		request.user赋值，赋值为登录系统的用户，在页面中直接解析{{user}}{{user.username}}										
+           退出：auth.logout()
+		request.user 匿名用户 AnymouserUser
+           验证：login_required()
+									   权限验证：permission_required()
+	2.自己实现，通过令牌token
+		登录：1）设置cookie，cookie中保存令牌token值
+		      2）服务端，保存token和登录系统用户关联关系
+		退出：1）清空cookie
+		      2）删除服务端中token和用户的关联关系
+		登录校验：验证cookie中的token值，是否能从服务端对应的用户信息
+		1）装饰器
+		2）中间件 
