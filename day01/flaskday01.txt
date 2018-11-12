@@ -1,0 +1,26 @@
+创建虚拟环境
+安装flask
+使用flask_script
+
+python xxx.py runserver -p 8080 -h 0.0.0.0 -d
+
+使用Manager管理app对象
+manage = Manager（app）
+
+# 路由匹配规则
+<选择器：参数名>
+选择器有int：表示接受的参数为int类型
+没有定义选择器，表示接受的参数为string类型（默认）
+选择器string：表示接受的参数一定为string类型
+选择器 uuid/path/float
+
+@app.route（‘/student/<int:id>’）
+def student(id):
+	return '我是学生为%d的学生' % id
+@app.route（‘/course/<id>/’）
+def course（id）
+	return '我是%s的课程' % id
+@app.route（‘get_uuid’）
+def get_uuid()
+	uu = uuid.uuid4()
+	return str(uu)
