@@ -24,3 +24,52 @@ def course（id）
 def get_uuid()
 	uu = uuid.uuid4()
 	return str(uu)
+
+第一步，生成蓝图对象，使用蓝图对象管理路由
+blue = Blueprint('app', __name__)
+
+
+第二步，注册蓝图
+app.register_blueprint(blueprint=app_blueprint, url_prefix='/app')
+
+@app_blueprint.route('redirect')
+def redirect_url():
+	# django写法：HttpResponseRedirect（‘namespace：name’）
+	# flask写法：redirect（url_for（‘蓝图名称，跳转的函数名’））
+	return redirect(url_for('app.hello_world'))
+
+响应response，是后端产生返回给前端（浏览器）
+make_response（相应内容，响应状态码（默认为200））
+响应绑定cookie，set_cookie/delete_cookie
+
+获取get请求传参：request。args
+获取post传参：request。form
+获取上传文件：request。files
+获取路径：request。path
+请求方式：request。method
+
+
+session['user_id']  获取用户id
+
+manage.py :
+app.secret_key = ‘asdsfsdfnjv’设置加密的复杂程度
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_REDIS'] = redis.Redis(host='127.0.0.1', port=6379)
+初始化flask对象app
+第一种
+Session（app）
+第二种
+sess = Session（）
+sess.init_app(app)
+
+
+
+
+
+
+
+
+
+
+
+

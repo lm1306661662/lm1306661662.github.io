@@ -1,0 +1,31 @@
+增：
+stu = Students()
+stu.s_name = '小犊子'
+db.session.add(stu)
+db.session.commit()
+删：
+stu = Students.query.filter(Students.s_name == '小犊子').first()
+db.session.delete(stu)
+db.session.commit()
+改：
+第一种：
+stu = Students.query.filter(Students.s_name == '小犊子').first()
+stu.s_name = '小崽子'
+db.session.add(stu)
+db.session.commit()
+第二种：
+Students.query.filter(Students.s_name == '小崽子').update({'s_name':'小犊子'})
+db.session.commit()
+return '更新学生成功'
+查：
+filter(模型名.字段 ==‘值’)
+stu = Students.query.filter_by(s_name='小犊子').first()
+all():查询所有结果，返回所有的结果是列表
+first():返回所有对象
+注意： 不要all().first()
+get（）：获取主键所在行的对象，如果获取不到，返回空
+stu = Students.query.get(2)
+order_by()排序
+降序：-id id desc
+升序：id id asc
+stu = Student.query.order_by('-id')
