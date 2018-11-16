@@ -1,0 +1,161 @@
+{%extends 'base_main.html'%}
+{%block content%}
+{% load static %}
+<div class="search_bar clearfix">
+	<a href="index.html" class="logo fl"><img src="{%static 'images/logo.png'%}"></a>
+	<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;购物车</div>
+	<div class="search_con fr">
+		<input type="text" class="input_text fl" name="" placeholder="搜索商品">
+		<input type="button" class="input_btn fr" name="" value="搜索">
+	</div>
+</div>
+
+<div class="total_count">全部商品<em>2</em>件</div>
+<ul class="cart_list_th clearfix">
+	<li class="col01">商品名称</li>
+	<li class="col02">商品单位</li>
+	<li class="col03">商品价格</li>
+	<li class="col04">数量</li>
+	<li class="col05">小计</li>
+	<li class="col06">操作</li>
+</ul>
+{%if goods_all%}
+{%for goods in goods_all%}
+<ul class="cart_list_td clearfix">
+	<li class="col01"><input type="checkbox" name="" {% if goods.2 %} checked {% endif %} onchange="change_select({{ goods.0.id }})"></li>
+	<input type="hidden" {% if goods.2 %} value="1" {% else %} value="0" {% endif %} id="goods_select_{{ goods.0.id }}">
+	<li class="col02"><img src="/media/{{goods.0.goods_front_image}}"></li>
+	<li class="col03">{{goods.0.name}}<br><em>{{goods.0.shop_price}}元/500g</em></li>
+	<li class="col04">500g</li>
+	<li class="col05">{{goods.0.shop_price}}元</li>
+	<li class="col06">
+		<div class="num_add">
+			<a href="javascript:;" class="add fl" onclick="add_cart_num({{goods.0.id}});">+</a>
+			<input type="text" class="num_show fl" id="goods_num_{{ goods.0.id }}" value="{{goods.1}}">
+			<a href="javascript:;" class="minus fl" onclick="sub_cart_num({{goods.0.id}});">-</a>
+		</div>
+	</li>
+	<li class="col07" id="col07_{{goods.0.id}}">{{goods.2}}元</li>
+	{%csrf_token%}
+	<li class="col08"><a href="javascript:;" id="col08_{{goods.0.id}}" onclick="goods_delete({{goods.0.id}});">删除</a></li>
+</ul>
+{%endfor%}
+{%endif%}
+<script>
+	<!--刷新商品价格-->
+	$.get('/cart/f_price/',function(data){
+		if(data.code == '200'){
+			for(var i= 0; i < data.cart_data.goods_price.length; i++){
+				price = data.cart_data.goods_price[i][1] + '元'
+				$('#col07_' + data.cart_data.goods_price[i][0]).html(price)
+			}
+			$('#total_price em').html(data.cart_data.all_price + '元')
+		}
+	});
+	 <!--增加商品的个数-->
+        function add_cart_num(goods_id){
+            <!--获取商品的个数-->
+            var goods_num = $('#goods_num_' + goods_id).val()
+            <!--TODO:暂且不判断添加商品是否超过库存-->
+            var nums = parseInt(goods_num) + 1
+            $('#goods_num_' + goods_id).val(nums)
+            change_cart_num(goods_id)
+        }
+
+        <!--减少商品的个数-->
+        function sub_cart_num(goods_id){
+            <!--获取商品的个数-->
+            var goods_num = $('#goods_num_' + goods_id).val()
+            <!--判断减少商品的数量不能小于1-->
+            nums = parseInt(goods_num)
+            if(nums>0){
+                num = nums - 1
+                $('#goods_num_' + goods_id).val(num)
+                change_cart_num(goods_id)
+            }
+        }
+	<!--删除商品-->
+	function goods_delete(id){
+		var csrf = $('input[name="csrfmiddlewaretoken"]').val()
+		$.ajax({
+			url:'/cart/delete/',
+			type:'POST',
+			dataType:'json',
+			data:{'id':id},
+			headers:{'X-CSRFToken': csrf},
+			success:function(data){
+				if (data.code == '200'){
+					$('#show_count').html(data.goods_count)
+					location.reload()
+				}
+			},
+			error:function(data){
+				alert('删除失败')
+			}
+		})
+	}
+	<!--修改商品的选择状态-->
+	function change_select(goods_id){
+		goods_select = $('#goods_select_' + goods_id).val()
+		if(goods_select == '1'){
+			$('#goods_select_' + goods_id).val('0')
+		}else{
+			$('#goods_select_' + goods_id).val('1')
+		}
+		change_cart_num(goods_id)
+	}
+<!--修改商品的个数,选择状态-->
+	function change_cart_num(goods_id){
+		var csrf = $('input[name="csrfmiddlewaretoken"]').val()
+		<!--获取商品的个数-->
+		var goods_num = $('#goods_num_' + goods_id).val()
+		<!--获取商品的选择状态-->
+		var is_select = $('#goods_select_' + goods_id).val()
+		$.ajax({
+			url:'/cart/change_goods_num/',
+			data:{'goods_id': goods_id, 'goods_num': goods_num, 'is_select': is_select},
+			type:'POST',
+			dataType:'json',
+			headers:{'X-CSRFToken': csrf},
+			success:function(data){
+				console.log(data);
+                $.get('/cart/f_price/',function(data){
+		        if(data.code == '200'){
+			    for(var i= 0; i < data.cart_data.goods_price.length; i++){
+				price = data.cart_data.goods_price[i][1] + '元'
+				$('#col07_' + data.cart_data.goods_price[i][0]).html(price)
+			}
+			$('#total_price em').html(data.cart_data.all_price + '元')
+		}
+	});
+			},
+			error:function(data){
+				alert('请求失败')
+			}
+		})
+	}
+	<!--获取总的商品数量-->
+
+</script>
+<ul class="settlements">
+	<li class="col01"><input type="checkbox" name="" checked=""></li>
+	<li class="col02">全选</li>
+	<li class="col03" id="total_price">合计(不含运费)：<span>¥</span><em>0</em><br>共计<b>2</b>件商品</li>
+	<li class="col04"><a href="{%url 'cart:place_order'%}">去结算</a></li>
+</ul>
+{%endblock%}
+{%block footer%}
+<div class="footer">
+	<div class="foot_link">
+		<a href="#">关于我们</a>
+		<span>|</span>
+		<a href="#">联系我们</a>
+		<span>|</span>
+		<a href="#">招聘人才</a>
+		<span>|</span>
+		<a href="#">友情链接</a>
+	</div>
+	<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
+	<p>电话：010-****888    京ICP备*******8号</p>
+</div>
+{%endblock%}
